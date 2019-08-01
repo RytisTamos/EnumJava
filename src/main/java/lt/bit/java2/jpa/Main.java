@@ -1,8 +1,11 @@
 package lt.bit.java2.jpa;
 
 import lt.bit.java2.jpa.entities.Employee;
+import lt.bit.java2.jpa.entities.Title;
+import lt.bit.java2.jpa.entities.TitlePK;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.util.logging.Logger;
 
 public class Main {
@@ -10,40 +13,30 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
-        LOG.info("Started");
+        LOG.info("YES");
 
         EntityManager em = EntityManagerHelper.entityManager();
 
-        Employee employee = em.find(Employee.class, 10004);
-        System.out.println(employee.getFullName());
+        System.out.println("*** Employee:");
 
-        employee.getTitles().forEach(title -> {
-            System.out.println(title.getTitle());
+        Employee employee = em.find(Employee.class, 10004);
+        System.out.println(employee.getFullName() + " " + employee.getGender() + " " + employee.getBirthDate() + " " + employee.getHireDate());
+
+        employee.getTitles().forEach(t -> {
+            System.out.println(t.getTitle() + " " + t.getFromDate() + " " + t.getToDate());
         });
 
-    //public static void main(String[] args) {
-        //System.out.println("Test");
+        System.out.println("*** Title:");
 
-        //EntityManager em = EntityManagerHelper.entityManager();
+        TitlePK titlePK = new TitlePK(
+                employee,
+                "Senior Engineer",
+                LocalDate.of(1995, 12, 1));
+        Title title = em.find(Title.class, titlePK);
 
-        //Employee employee = em.find(Employee.class, 10003);
-        //System.out.println(employee.getFirstName() + " " + employee.getLastName() + " " + employee.getGender() +
-        //        " " + employee.getBirthDate());
+        System.out.println(title.getTitle() + " " + title.getFromDate() + " " + title.getToDate());
+        System.out.println(title.getEmployee().getFullName());
 
-        //employee.setFirstName("Jonas");
-        //em.persist(employee);
-
-        //System.out.println(Gender.M.ordinal());
-        //System.out.println(Gender.M.name());
-        //System.out.println(Gender.M.toString());
-
-        //TitlePK titlePK = new TitlePK();
-        //titlePK.setEmpNo(10001);
-        //titlePK.setTitle("Senior Engineer");
-        //titlePK.setFromDate(LocalDate.of(1986, 6, 26));
-        //Title title = em.find(Title.class);
-
-
-
+        em.close();
     }
 }

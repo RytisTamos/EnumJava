@@ -5,31 +5,25 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDate;
 
-    @Entity
-    @Table(name = "titles")
-    @Data
-    @IdClass(TitlePK.class)
+@Entity
+@Table(name = "titles")
+@IdClass(TitlePK.class)
+@Data
+public class Title {
 
-    public class Title {
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "emp_no", referencedColumnName = "emp_no")
+    private Employee employee;
 
-        @Id
-        @Column(name = "emp_no", insertable = false, updatable = false)
-        private Integer empNo;
+    @Id
+    private String title;
 
-        @Id
-        private String title;
+    @Id
+    @Column(name = "from_date")
+    private LocalDate fromDate;
 
-        @Id
-        @Column(name = "from_date")
-        private LocalDate fromDate;
+    @Column(name = "to_date")
+    private LocalDate toDate;
 
-
-        @Column(name = "to_date")
-        private LocalDate toDate;
-
-        @ManyToOne(fetch = FetchType.EAGER)
-        @JoinColumn(name = "emp_no", referencedColumnName = "emp_no")
-        private Employee employee;
-    }
-
-
+}
